@@ -2,7 +2,8 @@ export type KeyEventCallback = () => void;
 
 export class KeyboardListener {
   private pressedKeys = new Set<string>();
-  private callbacks = new Map<string, KeyEventCallback[]>();
+  private pressCallbacks = new Map<string, KeyEventCallback[]>();
+  private releaseCallbacks = new Map<string, KeyEventCallback[]>();
 
   constructor() {
     window.addEventListener("keydown", this.onKeyDown);
@@ -10,20 +11,37 @@ export class KeyboardListener {
   }
 
   on(key: string, callback: KeyEventCallback) {
-    const existing = this.callbacks.get(key) ?? [];
+    const existing = this.pressCallbacks.get(key) ?? [];
     if (!existing.includes(callback)) {
       existing.push(callback);
     }
-    this.callbacks.set(key, existing);
+    this.pressCallbacks.set(key, existing);
+  }
+
+  onRelease(key: string, callback: KeyEventCallback) {
+    const existing = this.releaseCallbacks.get(key) ?? [];
+    if (!existing.includes(callback)) {
+      existing.push(callback);
+    }
+    this.releaseCallbacks.set(key, existing);
   }
 
   off(key: string, callback: KeyEventCallback) {
-    let existing = this.callbacks.get(key);
+    let existing = this.pressCallbacks.get(key);
     if (!existing) {
       return;
     }
     existing = existing.filter((cb) => cb !== callback);
-    this.callbacks.set(key, existing);
+    this.pressCallbacks.set(key, existing);
+  }
+
+  offRelease(key: string, callback: KeyEventCallback) {
+    let existing = this.releaseCallbacks.get(key);
+    if (!existing) {
+      return;
+    }
+    existing = existing.filter((cb) => cb !== callback);
+    this.releaseCallbacks.set(key, existing);
   }
 
   isKeyPressed(key: string) {
@@ -49,10 +67,11 @@ export class KeyboardListener {
     }
 
     this.pressedKeys.add(key);
-    this.callbacks.get(key)?.forEach((cb) => cb());
+    this.pressCallbacks.get(key)?.forEach((cb) => cb());
   };
 
   private readonly onKeyUp = (e: KeyboardEvent) => {
+    this.releaseCallbacks.get(e.key.toLocaleLowerCase())?.forEach((cb) => cb());
     this.pressedKeys.delete(e.key.toLocaleLowerCase());
   };
 }

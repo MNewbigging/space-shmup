@@ -2,13 +2,14 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GameLoader } from "../loaders/game-loader";
 import { KeyboardListener } from "../listeners/keyboard-listener";
+import { Player } from "./player";
 
 export class SpaceScene {
   private scene = new THREE.Scene();
   private camera = new THREE.PerspectiveCamera();
   private controls: OrbitControls;
 
-  private player: THREE.Object3D;
+  private player: Player;
 
   constructor(
     private renderer: THREE.WebGLRenderer,
@@ -24,9 +25,10 @@ export class SpaceScene {
     this.controls.enableDamping = true;
 
     // Setup player here to satisfy compiler that it exists
-    this.player = this.gameLoader.modelLoader.get("ship-fighter-05");
-    this.player.rotateY(Math.PI);
-    this.scene.add(this.player);
+    const playerShip = this.gameLoader.modelLoader.get("ship-fighter-05");
+    this.player = new Player(playerShip, this.keyboardListener);
+    this.player.setup();
+    this.scene.add(this.player.ship);
   }
 
   getCamera() {
@@ -35,16 +37,19 @@ export class SpaceScene {
 
   update(dt: number) {
     this.controls.update();
+
+    this.player.update(dt);
+
     this.renderer.render(this.scene, this.camera);
   }
 
   private setupCamera() {
     this.camera.fov = 75;
-    this.camera.far = 100;
+    this.camera.far = 500;
     const canvas = this.renderer.domElement;
     this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
     this.camera.position.z = 3;
-    this.camera.position.y = 20;
+    this.camera.position.y = 50;
   }
 
   private setupLights() {
