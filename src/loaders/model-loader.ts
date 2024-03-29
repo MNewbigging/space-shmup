@@ -7,10 +7,8 @@ import { TextureLoader } from "./texture-loader";
 export class ModelLoader {
   doneLoading = false;
   readonly models = new Map<string, THREE.Object3D>();
-
+  readonly textureLoader = new TextureLoader();
   private loadingManager = new THREE.LoadingManager();
-
-  private textureLoader = new TextureLoader();
 
   get(modelName: string): THREE.Object3D {
     // Return the model if found

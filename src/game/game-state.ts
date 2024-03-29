@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { GameLoader } from "./loaders/game-loader";
+import { GameLoader } from "../loaders/game-loader";
 import { SpaceScene } from "./space-scene";
 
 export class GameState {

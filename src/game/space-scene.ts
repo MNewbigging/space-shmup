@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { GameLoader } from "./loaders/game-loader";
+import { GameLoader } from "../loaders/game-loader";
 
 export class SpaceScene {
   private scene = new THREE.Scene();
@@ -14,11 +14,12 @@ export class SpaceScene {
     this.setupCamera();
     this.setupLights();
     this.setupObjects();
+    this.setupSkybox();
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
 
-    this.scene.background = new THREE.Color("#1680AF");
+    //this.scene.background = new THREE.Color("#1680AF");
   }
 
   getCamera() {
@@ -56,5 +57,13 @@ export class SpaceScene {
     const bandit = this.gameLoader.modelLoader.get("bandit");
     bandit.position.z = -0.5;
     this.scene.add(bandit);
+  }
+
+  private setupSkybox() {
+    const skyboxTexture =
+      this.gameLoader.modelLoader.textureLoader.get("skybox");
+    if (skyboxTexture) {
+      this.scene.background = skyboxTexture;
+    }
   }
 }
