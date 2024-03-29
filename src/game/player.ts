@@ -68,9 +68,9 @@ export class Player {
   };
 
   private onReleaseForward = () => {
-    // If not pressing backwards
-    if (!this.keyboardListener.isKeyPressed("s")) {
-      // Z-component of acceleration starts ramping down
+    // If moving forwards
+    if (this.direction.z === -1) {
+      // Can decelerate
       this.accelerationRampDir.z = -1;
     }
   };
@@ -83,9 +83,9 @@ export class Player {
   };
 
   private onReleaseBackward = () => {
-    // If not pressing forwards
-    if (!this.keyboardListener.isKeyPressed("w")) {
-      // Z-component of acceleration starts ramping down
+    // If moving backwards
+    if (this.direction.z === 1) {
+      // Can decelerate
       this.accelerationRampDir.z = -1;
     }
   };
@@ -98,9 +98,9 @@ export class Player {
   };
 
   private onReleaseLeft = () => {
-    // If not pressing right
-    if (!this.keyboardListener.isKeyPressed("d")) {
-      // X-component of acceleration starts ramping down
+    // If moving left
+    if (this.direction.x === -1) {
+      // Can decelerate
       this.accelerationRampDir.x = -1;
     }
   };
@@ -113,9 +113,8 @@ export class Player {
   };
 
   private onReleaseRight = () => {
-    // If not pressing left
-    if (!this.keyboardListener.isKeyPressed("a")) {
-      // X-component of acceleration starts ramping down
+    // If moving right
+    if (this.direction.x === 1) {
       this.accelerationRampDir.x = -1;
     }
   };
