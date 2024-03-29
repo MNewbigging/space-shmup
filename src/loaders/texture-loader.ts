@@ -35,17 +35,30 @@ export class TextureLoader {
 
   private loadTextures() {
     const loader = new THREE.TextureLoader(this.loadingManager);
-    this.loadBanditTexture(loader);
+
+    // Get a map of all urls and names for each texture to load in the same manner
+    const nameUrlMap = this.getNameUrlMap();
+    nameUrlMap.forEach((url, name) => {
+      loader.load(url, (texture) => {
+        texture.encoding = THREE.sRGBEncoding;
+        this.textures.set(name, texture);
+      });
+    });
+
+    // Load other textures with more specific configs
     this.loadSkybox();
   }
 
-  private loadBanditTexture(loader: THREE.TextureLoader) {
-    const url = new URL("/bandit-texture.png", import.meta.url).href;
-    loader.load(url, (texture) => {
-      // So colours don't look washed out
-      texture.encoding = THREE.sRGBEncoding;
-      this.textures.set("bandit", texture);
-    });
+  private getNameUrlMap() {
+    const nameUrlMap = new Map<string, string>();
+
+    const banditUrl = new URL("/bandit-texture.png", import.meta.url).href;
+    nameUrlMap.set("bandit", banditUrl);
+
+    const atlast1aUrl = new URL("/textures/atlas_1A.png", import.meta.url).href;
+    nameUrlMap.set("atlas-1a", atlast1aUrl);
+
+    return nameUrlMap;
   }
 
   private loadSkybox() {

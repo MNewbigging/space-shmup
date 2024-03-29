@@ -47,14 +47,13 @@ export class SpaceScene {
   }
 
   private setupObjects() {
-    // Add box
-    const box = this.gameLoader.modelLoader.get("box");
-    this.scene.add(box);
+    const axesHelper = new THREE.AxesHelper(20);
+    this.scene.add(axesHelper);
 
-    // Add bandit
-    const bandit = this.gameLoader.modelLoader.get("bandit");
-    bandit.position.z = -0.5;
-    this.scene.add(bandit);
+    // Add ship
+    const ship = this.gameLoader.modelLoader.get("ship-fighter-05");
+    ship.position.x = 2;
+    this.scene.add(ship);
   }
 
   private setupSkybox() {

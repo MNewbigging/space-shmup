@@ -40,41 +40,34 @@ export class ModelLoader {
   }
 
   private loadModels = () => {
-    const gltfLoader = new GLTFLoader(this.loadingManager);
-    this.loadKenneyBox(gltfLoader);
-
     const fbxLoader = new FBXLoader(this.loadingManager);
-    this.loadSyntyModel(fbxLoader);
+
+    // Load all similar models in the same manner
+    const nameUrlMap = this.getNameUrlMap();
+    nameUrlMap.forEach((url, name) => {
+      fbxLoader.load(url, (group) => {
+        // Apply the same basic texture to each model
+        // TODO - might want to do this separately/outside of this class
+        const atlas = this.textureLoader.get("atlas-1a");
+        if (atlas) {
+          this.applyModelTexture(group, atlas);
+        }
+
+        this.scaleSyntyModel(group);
+        this.models.set(name, group);
+        console.log("loaded " + name, group);
+      });
+    });
   };
 
-  private loadKenneyBox(loader: GLTFLoader) {
-    const boxUrl = new URL("/box-small.glb", import.meta.url).href;
-    loader.load(boxUrl, (gltf) => {
-      // Traverse the gltf scene
-      gltf.scene.traverse((child) => {
-        const node = child as THREE.Mesh;
-        if (node.isMesh) {
-          // https://kenney.nl/ assets need their metalness reducing to render correctly
-          const mat = node.material as THREE.MeshStandardMaterial;
-          mat.metalness = 0;
-        }
-      });
+  private getNameUrlMap() {
+    const nameUrlMap = new Map<string, string>();
 
-      this.models.set("box", gltf.scene);
-    });
-  }
+    const fighter5Url = new URL("/models/ship_fighter_05.fbx", import.meta.url)
+      .href;
+    nameUrlMap.set("ship-fighter-05", fighter5Url);
 
-  private loadSyntyModel(loader: FBXLoader) {
-    const url = new URL("/bandit.fbx", import.meta.url).href;
-    loader.load(url, (group) => {
-      const texture = this.textureLoader.get("bandit");
-      if (texture) {
-        this.applyModelTexture(group, texture);
-      }
-
-      this.scaleSyntyModel(group);
-      this.models.set("bandit", group);
-    });
+    return nameUrlMap;
   }
 
   private applyModelTexture(group: THREE.Group, texture: THREE.Texture) {
