@@ -18,8 +18,6 @@ export class SpaceScene {
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
-
-    //this.scene.background = new THREE.Color("#1680AF");
   }
 
   getCamera() {
