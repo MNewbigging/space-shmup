@@ -2,6 +2,10 @@ export function easeInCubic(x: number): number {
   return x * x * x;
 }
 
-export function lerp(a: number, b: number, alpha: number) {
-  return a + alpha * (b - a);
+export function easeInSine(x: number): number {
+  return 1 - Math.cos((x * Math.PI) / 2);
+}
+
+export function easeInOutSine(x: number): number {
+  return -(Math.cos(Math.PI * x) - 1) / 2;
 }
