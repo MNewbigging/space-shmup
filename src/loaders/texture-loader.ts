@@ -52,9 +52,6 @@ export class TextureLoader {
   private getNameUrlMap() {
     const nameUrlMap = new Map<string, string>();
 
-    const banditUrl = new URL("/bandit-texture.png", import.meta.url).href;
-    nameUrlMap.set("bandit", banditUrl);
-
     const atlast1aUrl = new URL("/textures/atlas_1A.png", import.meta.url).href;
     nameUrlMap.set("atlas-1a", atlast1aUrl);
 

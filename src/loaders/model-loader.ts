@@ -55,7 +55,6 @@ export class ModelLoader {
 
         this.scaleSyntyModel(group);
         this.models.set(name, group);
-        console.log("loaded " + name, group);
       });
     });
   };
