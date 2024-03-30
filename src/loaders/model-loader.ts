@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TextureLoader } from "./texture-loader";
 
@@ -46,13 +45,7 @@ export class ModelLoader {
     const nameUrlMap = this.getNameUrlMap();
     nameUrlMap.forEach((url, name) => {
       fbxLoader.load(url, (group) => {
-        // Apply the same basic texture to each model
-        // TODO - might want to do this separately/outside of this class
-        const atlas = this.textureLoader.get("atlas-1a");
-        if (atlas) {
-          this.applyModelTexture(group, atlas);
-        }
-
+        this.applyTexture(name, group);
         this.scaleSyntyModel(group);
         this.models.set(name, group);
       });
@@ -66,7 +59,36 @@ export class ModelLoader {
       .href;
     nameUrlMap.set("ship-fighter-05", fighter5Url);
 
+    const asteroid01Url = new URL("/models/asteroid_01.fbx", import.meta.url)
+      .href;
+    nameUrlMap.set("asteroid-01", asteroid01Url);
+
+    const asteroid02Url = new URL("/models/asteroid_02.fbx", import.meta.url)
+      .href;
+    nameUrlMap.set("asteroid-02", asteroid02Url);
+
+    const asteroid03Url = new URL("/models/asteroid_03.fbx", import.meta.url)
+      .href;
+    nameUrlMap.set("asteroid-03", asteroid03Url);
+
+    const asteroid04Url = new URL("/models/asteroid_04.fbx", import.meta.url)
+      .href;
+    nameUrlMap.set("asteroid-04", asteroid04Url);
+
+    const asteroid05Url = new URL("/models/asteroid_05.fbx", import.meta.url)
+      .href;
+    nameUrlMap.set("asteroid-05", asteroid05Url);
+
     return nameUrlMap;
+  }
+
+  private applyTexture(name: string, group: THREE.Group) {
+    // Get the right texture for this model
+    let texture = this.textureLoader.get("atlas-1a");
+
+    if (texture) {
+      this.applyModelTexture(group, texture);
+    }
   }
 
   private applyModelTexture(group: THREE.Group, texture: THREE.Texture) {

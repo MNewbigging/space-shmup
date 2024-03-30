@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { KeyboardListener } from "../listeners/keyboard-listener";
 import { clamp } from "three/src/math/MathUtils";
-import { easeInCubic, easeInOutSine, easeInSine } from "../utils/math";
+import { easeInSine } from "../utils/math";
 
 export class Player {
   direction = new THREE.Vector3();
@@ -20,6 +20,8 @@ export class Player {
   setup() {
     // Face the right way
     this.ship.rotateY(Math.PI);
+
+    this.setupCollider();
   }
 
   update(dt: number) {
@@ -68,5 +70,11 @@ export class Player {
 
     // Add velocity to current position to move the ship by that much
     this.ship.position.add(this.velocity);
+  }
+
+  private setupCollider() {
+    // Use basic spherical collider for the ship
+    const mesh = this.ship.children[0] as THREE.Mesh;
+    mesh.geometry.computeBoundingSphere();
   }
 }

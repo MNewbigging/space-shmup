@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GameLoader } from "../loaders/game-loader";
 import { KeyboardListener } from "../listeners/keyboard-listener";
 import { Player } from "./player";
+import { AsteroidManager } from "./asteroid-manager";
 
 export class SpaceScene {
   private scene = new THREE.Scene();
@@ -10,6 +11,7 @@ export class SpaceScene {
   private controls: OrbitControls;
 
   private player: Player;
+  private asteroidManager: AsteroidManager;
 
   constructor(
     private renderer: THREE.WebGLRenderer,
@@ -29,6 +31,8 @@ export class SpaceScene {
     this.player = new Player(playerShip, this.keyboardListener);
     this.player.setup();
     this.scene.add(this.player.ship);
+
+    this.asteroidManager = new AsteroidManager(this.gameLoader, this.scene);
   }
 
   getCamera() {
